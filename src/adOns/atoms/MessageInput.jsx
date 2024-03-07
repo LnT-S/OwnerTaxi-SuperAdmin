@@ -18,6 +18,7 @@ const MessageInput = (props) => {
                     placeholderTextColor={'gray'}
                     value={msg}
                     onChangeText={(v) => setMsg(v)}
+                    multiline={true}
                 // Other TextInput props go here
                 />
                 <Icon
@@ -36,7 +37,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         width: '100%',
-        height: getResponsiveValue(70, 50),
+        minHeight: getResponsiveValue(70, 50),
+        maxHeight : 120,
         borderRadius: 20,
         borderWidth: 2,
         paddingHorizontal: 15,
@@ -53,7 +55,10 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         fontSize: 18,
-        color: 'white'
+        color: 'white',
+        display : 'flex',
+        justifyContent : 'flex-start',
+        flexWrap : 'wrap'
     },
 });
 

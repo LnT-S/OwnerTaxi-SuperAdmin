@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     },
     icon: {
         marginRight: 10,
+        color: 'black'
     },
     input: {
         flex: 1,

@@ -165,7 +165,8 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        marginHorizontal: 5
+        marginHorizontal: 5,
+        flexWrap : 'wrap'
     },
     chatDisplayScreen: {
     },

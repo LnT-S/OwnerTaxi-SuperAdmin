@@ -64,7 +64,7 @@ const LoginPage = () => {
                     <View style={styles.logoPart}>
                         <Image
                             source={require('../../assets/imgaes/DriverAppLogo.png')}
-                            style={{ width: 300, height: 100 }}
+                            style={{ width: 300, height: 155 }}
                         />
                         <Text style={styles.title}>LogIn</Text>
                     </View>
