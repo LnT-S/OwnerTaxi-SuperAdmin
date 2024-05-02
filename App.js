@@ -33,6 +33,9 @@ import MessageScreen from './src/components/Message/MessageScreen';
 import Notification from './src/components/Notification/Notification';
 import NotificationFullPage from './src/components/Notification/NotificationFullPage';
 import Setting from './src/components/setting/Setting';
+import DocVerification from './src/components/home/DocVerification';
+import DriverpayInfo from './src/components/home/DriverpayInfo';
+import vendorList from './src/components/home/vendorList';
 
 const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator();
@@ -42,6 +45,9 @@ function DrawerNavigator() {
   return (
     <Drawer.Navigator initialRouteName='Home' drawerContent={(props) => <CustomDrawerContent {...props} />} backBehavior="history">
       <Drawer.Screen name="Home" component={HomePage} options={{ headerShown: false }} />
+      <Drawer.Screen name="DocVerification" component={DocVerification} options={{ headerShown: false }} />
+      <Drawer.Screen name="DriverpayInfo" component={DriverpayInfo} options={{ headerShown: false }} />
+      <Drawer.Screen name="vendorList" component={vendorList} options={{ headerShown: false }} />
       <Drawer.Screen name="Profile" component={ProfilePage} options={{ headerShown: false }} />
       <Drawer.Screen name="message" component={Message} options={{ headerShown: false }} />
       <Drawer.Screen name="messageScreen" component={MessageScreen} options={{ headerShown: false }} />
@@ -89,7 +95,7 @@ function App() {
             />
            
               <Stack.Screen
-                name='HomeSceen'
+                name='HomeScreen'
                 component={DrawerNavigator}
                 options={{ headerShown: false }}
               />

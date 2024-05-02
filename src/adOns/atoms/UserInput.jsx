@@ -8,11 +8,13 @@ const UserInput = (props) => {
 
     return (
         <View style={styles.inputContainer}>
-            <Icon name={props.icon} style={styles.icon} size={24} />
+            <Icon name={props.icon} style={styles.icon} size={24} color="black"/>
             <TextInput
                 style={styles.input}
                 placeholder={props.placeholder}
-                placeholderTextColor='gray'
+                placeholderTextColor='black'
+                onChangeText={props.onChangeText}
+                {...props}
             // Other TextInput props go here
             />
         </View>

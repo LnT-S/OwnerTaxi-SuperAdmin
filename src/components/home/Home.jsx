@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BackHandler, ScrollView, Text, View } from 'react-native'
+import { BackHandler, FlatList, ScrollView, Text, View, TouchableOpacity, StyleSheet } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import SearchBox from '../../adOns/atoms/Search'
 import AuthenticatedLayout from '../../screens/layout/AuthenticatedLayout'
@@ -9,11 +9,58 @@ import { height } from '../../styles/responsive'
 const HomePage = () => {
     const navigation = useNavigation()
 
-    const [showSearchResult , setShowSearchResults] = useState(true)
-    const [searchArray, setSearchArray] = useState(['item1', 'ghantu', 'kalyaanimaam', 'shrutimaam','herapheri','kgf'])
-
-
-
+    const OptionList = [
+        {
+            name: 'Document Verification',
+            route: 'DocVerification'
+        },
+        {
+            name: 'Driver Payment Info',
+            route: 'DriverpayInfo'
+        },
+        {
+            name: 'Vendor List',
+            route: 'vendorList'
+        },
+        {
+            name: 'Option 4',
+            route: 'Setting'
+        },
+        {
+            name: 'Option 5',
+            route: 'Setting'
+        },
+        {
+            name: 'Option 6',
+            route: 'Setting'
+        },
+        {
+            name: 'Option 7',
+            route: 'Setting'
+        },
+        {
+            name: 'Option 8',
+            route: 'Setting'
+        },
+        {
+            name: 'Option 9',
+            route: 'Setting'
+        },
+        {
+            name: 'Option 10',
+            route: 'Setting'
+        },
+        {
+            name: 'Option 10',
+            route: 'Setting'
+        },   {
+            name: 'Option 10',
+            route: 'Setting'
+        },   {
+            name: 'Option 10',
+            route: 'Setting'
+        },
+    ]
     useEffect(() => {
         const backAction = () => {
             navigation.goBack()
@@ -29,19 +76,38 @@ const HomePage = () => {
 
     return (
         <AuthenticatedLayout title={'Home'}>
-            <ScrollView >
-                <View style={{ position: 'relative' }}>
-                    <View style= {{zIndex : 2}}>
-                        <SearchBox searchArray={searchArray}/>
-                    </View>
-                    <View style={{ position: 'relative', zIndex: 1 }}>
-                        <Text style={{ color: 'red' }}>Hoome Page</Text>
-                       
-                    </View>
-                </View>
-            </ScrollView>
+            <FlatList
+                style={{}}
+                keyExtractor={(item, index) => (index)}
+                data={OptionList}
+                renderItem={({ item }) => {
+                    return <TouchableOpacity onPress={() => { navigation.navigate(item.route) }} style={styles.itemContainer}>
+                        <Text style={styles.text}>
+                            {item.name}
+                        </Text>
+                        <Text style={[styles.text]}>
+                        >
+                        </Text>
+                    </TouchableOpacity>
+                }}
+
+            />
         </AuthenticatedLayout>
     )
 }
-
+const styles = StyleSheet.create({
+    itemContainer: {
+        backgroundColor: 'black',
+        marginVertical: 10,
+        marginHorizontal: 10,
+        padding: 20,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    text: {
+        color: 'white',
+        fontSize: 18
+    }
+})
 export default HomePage

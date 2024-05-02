@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, View, ActivityIndicator  } from 'react-native';
 import { getResponsiveValue, screenWidth } from '../../styles/responsive';
 import { BgColor } from '../../styles/colors';
 
@@ -8,7 +8,7 @@ const PressButton = (props) => {
     return (
         <TouchableOpacity style={[styles.buttonContainer]} {...props}>
             <View style={[styles.button]} >
-                <Text style={styles.text}>{props.name}</Text>
+                {(props.loading===undefined || props.loading===false) ? <Text style={styles.text}>{props.name}</Text> : <ActivityIndicator style={styles.text} color={'white'}/>}
             </View>
         </TouchableOpacity>
     );
