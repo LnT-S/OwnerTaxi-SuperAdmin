@@ -35,7 +35,8 @@ import NotificationFullPage from './src/components/Notification/NotificationFull
 import Setting from './src/components/setting/Setting';
 import DocVerification from './src/components/home/DocVerification';
 import DriverpayInfo from './src/components/home/DriverpayInfo';
-import vendorList from './src/components/home/vendorList';
+import vendorList from './src/components/home/VendorList';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator();
@@ -60,8 +61,24 @@ function DrawerNavigator() {
 function App() {
 
   const [isLoading, setIsLoading] = useState(true);
+  const [initialRoute , setInitialRoute] = useState("LoginScreen")
+
+  const isTokenAvailable = async ()=>{
+    let token = await AsyncStorage.getItem('token')
+    console.log("TOKEN ",token)
+    if(token!==null && token !==undefined){
+      setInitialRoute("HomeScreen")
+      return true
+    }
+    return false
+  }
 
   useEffect(() => {
+    isTokenAvailable().then(is=>{
+      console.log(is)
+    }).catch(error=>{
+      console.log("ERROR IN LOGGING TOKEN",error)
+    })
     setTimeout(() => {
       setIsLoading(false); // Set isLoading to false when the loading task is complete
     }, 2500); // Simulate loading for 2 seconds, replace this with your actual loading logic
@@ -75,7 +92,7 @@ function App() {
           {isLoading ? (
             <SplashScreen />
           ) : (<Stack.Navigator
-            initialRouteName="LoginScreen"
+            initialRouteName={initialRoute}
             screenOptions={{
               gestureEnabled: true,
               gestureDirection: 'horizontal',

@@ -81,6 +81,9 @@ const LoginPage = () => {
                     if (resObj.status === 200) {
                         setLoading(false)
                         navigation.navigate('OTPScreen')
+                    }else{
+                        setLoading(false)
+                        setError(resObj.data.message)
                     }
                 } else {
                     setLoading(false)

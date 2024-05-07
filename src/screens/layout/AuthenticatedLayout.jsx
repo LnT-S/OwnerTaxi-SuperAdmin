@@ -29,7 +29,9 @@ const AuthenticatedLayout = (props) => {
         threeDotOptionObject,
         leftCenterJsx,
         headerStyles,
-        headerTextStyles
+        headerTextStyles,
+        showAddIcon,
+        addButtonAction
     } = props
     return (
         <KeyboardAvoidingView
@@ -59,7 +61,10 @@ const AuthenticatedLayout = (props) => {
                     </View>
                     {/*FOOTER*/}
                     {(showFooter === undefined || showFooter === true) ? <View style={styles.footer}>
-                        <Footer />
+                        <Footer 
+                        showAddIcon={showAddIcon}
+                        addButtonAction={addButtonAction}
+                        />
                     </View> : ''}
                 </View>
             </View>

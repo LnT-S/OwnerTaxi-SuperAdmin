@@ -86,7 +86,6 @@ const HomePage = () => {
                             {item.name}
                         </Text>
                         <Text style={[styles.text]}>
-                        >
                         </Text>
                     </TouchableOpacity>
                 }}

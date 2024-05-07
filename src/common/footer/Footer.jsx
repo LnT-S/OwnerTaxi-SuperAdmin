@@ -5,8 +5,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Footer = () => {
+const Footer = (props) => {
 
+    const { showAddIcon,addButtonAction } = props
     const navigation = useNavigation()
     const [userIs, setUserIs] = useState(null)
 
@@ -31,16 +32,16 @@ const Footer = () => {
                         <Icon name="home" size={40} color="#000" />
                     </View>
                 </TouchableOpacity>
-               {/*} <TouchableOpacity onPress={() => navigation.navigate('Document')}>
+                {/*} <TouchableOpacity onPress={() => navigation.navigate('Document')}>
                     <View style={styles.icons}>
                         <Icon name="event" size={40} color="#000" />
                     </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('Wallet')}>
+                </TouchableOpacity>*/}
+                {showAddIcon&&(addButtonAction!==undefined)&&<TouchableOpacity onPress={addButtonAction}>
                     <View style={styles.icons}>
-                        <Icon name="account-balance-wallet" size={40} color="#000" />
+                        <Icon name="add-circle" size={40} color="#000" />
                     </View>
-    </TouchableOpacity>*/}
+                </TouchableOpacity>}
                 <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
                     <View style={styles.icons}>
                         <Icon name="person" size={40} color="#000" />

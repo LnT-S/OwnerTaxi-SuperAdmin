@@ -4,7 +4,7 @@ import AuthenticatedLayout from '../../screens/layout/AuthenticatedLayout';
 import ThreeWayPushButton from '../../adOns/molecules/ThreeWayPushButton';
 import { FlatList } from 'react-native-gesture-handler';
 
-const vendorList = () => {
+const VendorList = () => {
     const [selectedOption, setSelectedOption] = useState('')
     const vendorList = [
         {
@@ -68,7 +68,6 @@ const vendorList = () => {
                             {item.phone}
                         </Text>
                         <Text style={styles.text}>
-                        >
                         </Text>
                     </View>
                 }}
@@ -94,4 +93,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default vendorList;
+export default VendorList;

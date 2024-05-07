@@ -19,7 +19,6 @@ const Profile = () => {
   const handleShow = () => {
     setShowModal(false);
   };
- 
 
   return (
     <AuthenticatedLayout title={'Profile'}>

@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import AuthenticatedLayout from '../../screens/layout/AuthenticatedLayout';
 import ThreeWayPushButton from '../../adOns/molecules/ThreeWayPushButton';
 import { FlatList } from 'react-native-gesture-handler';
+import AddDocumentModal from '../../adOns/molecules/AddDocumentModal';
 
 const DocVerification = () => {
     const [selectedOption, setSelectedOption] = useState('')
+    const [showAddModal, setShowAddModal] = useState(false)
     const docList = [
         {
             type: 'pending',
@@ -52,9 +54,19 @@ const DocVerification = () => {
             phone: '1000999000'
         },
     ]
-
+    // useEffect(()=>{
+    //     console.log("SHOW ",showAddModal)
+    // },[showAddModal])
     return (
-        <AuthenticatedLayout title={'Document Verification'}>
+        <AuthenticatedLayout
+            title={'Document Verification'}
+            showAddIcon={true}
+            addButtonAction={() => {setShowAddModal(true)}}
+        >
+            <AddDocumentModal
+                show={showAddModal}
+                setShow={setShowAddModal}
+            />
             <ThreeWayPushButton outerStyles={{ margin: 9, width: '96%', height: 55 }}
                 option1={'All'} option2={'Pending'} option3={'Verified'} setter={setSelectedOption} />
 
@@ -68,7 +80,6 @@ const DocVerification = () => {
                             {item.phone}
                         </Text>
                         <Text style={styles.text}>
-                        >
                         </Text>
                     </View>
                 }}
