@@ -9,6 +9,7 @@ import { showNoty } from '../../common/flash/flashNotification';
 import FlashMessage from 'react-native-flash-message';
 import server from '../../services/server.tsx'
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import SearchBox from '../../adOns/atoms/Search.js';
 
 const DocVerification = () => {
     const navigation = useNavigation()
@@ -17,7 +18,21 @@ const DocVerification = () => {
     const [docList, setDocList] = useState([])
     const [isRefreshing, setIsRefreshing] = useState(false)
     const ref = useRef(null)
+    const [searchedTerm, setSearchedTerm] = useState('')
+    const [searchedData, setSearchedData] = useState(docList)
 
+    useEffect(() => {
+        // Filter data whenever the search query changes
+        if (searchedTerm === '') {
+            return setSearchedData(docList)
+        }
+        console.log('Serched term', searchedTerm)
+        const filtered = docList.filter(item =>
+            (item.name && item.name.includes(searchedTerm || '')) ||
+            (item.phoneNo && item.phoneNo.toString().includes(searchedTerm || ''))
+        );
+        setSearchedData(filtered);
+    }, [searchedTerm]);
 
     const fetchData = () => {
         setIsRefreshing(true)
@@ -61,13 +76,16 @@ const DocVerification = () => {
                 show={showAddModal}
                 setShow={setShowAddModal}
             />
+            <SearchBox  placeholder={'Search by Name or Phone Number'}
+            setSearchedTerm={setSearchedTerm}
+            searchedTerm={searchedTerm} />
             <ThreeWayPushButton outerStyles={{ margin: 9, width: '96%', height: 55 }}
                 option1={'All'} option2={'Pending'} option3={'Verified'} setter={setSelectedOption} />
 
             <FlatList
                 style={{}}
                 keyExtractor={(item, index) => (index)}
-                data={docList}
+                data={searchedData}
                 refreshControl={
                     <RefreshControl refreshing={isRefreshing} onRefresh={fetchData} />
                 }
