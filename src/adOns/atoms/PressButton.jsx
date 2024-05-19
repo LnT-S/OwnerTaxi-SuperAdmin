@@ -6,8 +6,8 @@ import { BgColor } from '../../styles/colors';
 
 const PressButton = (props) => {
     return (
-        <TouchableOpacity style={[styles.buttonContainer]} {...props}>
-            <View style={[styles.button]} >
+        <TouchableOpacity style={[styles.buttonContainer ]} {...props}>
+            <View style={[styles.button, {backgroundColor : props.bg?props.bg : 'black'}]} >
                 {(props.loading===undefined || props.loading===false) ? <Text style={styles.text}>{props.name}</Text> : <ActivityIndicator style={styles.text} color={'white'}/>}
             </View>
         </TouchableOpacity>

@@ -1,5 +1,8 @@
 import DocumentPicker from 'react-native-document-picker';
 import CroppedImagePicker from 'react-native-image-crop-picker';
+import Clipboard from '@react-native-clipboard/clipboard';
+import { Alert, PermissionsAndroid, Platform } from 'react-native';
+import RNFS from 'react-native-fs';
 
 
 type messageObject = {
@@ -107,4 +110,68 @@ export const imagePicker = async function (
     }
 
 
+}
+
+export const copyToClipboard = (text: string) => {
+    try {
+        Clipboard.setString(text)
+        return true
+    } catch (error) {
+        console.log('ERROR COPYING TO CLIPBOARD', error)
+        return false
+    }
+}
+const getFileSize = async (filePath: string) => {
+    try {
+        const statResult = await RNFS.stat(filePath);
+        return statResult.isFile() ? statResult.size : 0;
+    } catch (error) {
+        return 0;
+    }
+};
+export const captureAndDownload = async (uri: string, setProgress: Function, phone: string, name: string | undefined) => {
+    try {
+        console.log('URI ', uri)
+        const imageUrl = uri.replaceAll('\\', '/');
+        console.log("URL ", imageUrl)
+        const dir = RNFS.DownloadDirectoryPath;
+        const fileName = `${name ? name + phone : phone}${new Date().getTime()}`;
+        const filePath = `${dir}/${fileName}.jpg`;
+        try {
+            const fileSize = await getFileSize(filePath);
+            const { promise } = RNFS.downloadFile({
+                fromUrl: imageUrl,
+                toFile: filePath,
+                headers: {
+                    Range: `bytes=${fileSize}-`,  // Request the range from the last downloaded byte
+                },
+                begin: (res) => {
+                    console.log('Download has begun');
+                },
+                progress: (data) => {
+                    const percentage = ((data.bytesWritten + fileSize) / (data.contentLength + fileSize)) * 100;
+                    const totalBytesWritten = data.bytesWritten + fileSize;
+                    const totalBytesExpected = data.contentLength + fileSize;
+                    const percentag = totalBytesWritten / totalBytesExpected;
+                    setProgress(percentag)
+                    console.log(`Progress: ${percentage.toFixed(2)}%`);
+                },
+            });
+            const result = await promise;
+            if (result.statusCode === 200 || result.statusCode === 206) {
+                Alert.alert('Download Success', 'Image downloaded successfully');
+            } else {
+                console.log("STATUS ", result.bytesWritten)
+                Alert.alert('Download Failed', `Status Code: ${result.statusCode}`);
+            }
+        } catch (error) {
+            console.error(error);
+            Alert.alert('Download Failed');
+        }
+        // let info = await RNFS.copyFile(uri, filePath);
+        // console.log("STATUS DOWNLOADED TO ", filePath);
+        // return info
+    } catch (error) {
+        console.log('ERROR DOWNLOADING THE STATUS ', error)
+    }
 }

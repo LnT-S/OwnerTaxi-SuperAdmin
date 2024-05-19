@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Button, StyleSheet, View , Modal, Text} from "react-native";
+import { Button, StyleSheet, View, Modal, Text, Image } from "react-native";
 import PressButton from "../atoms/PressButton";
 
-export default function YesNoModal(props) {
+export default function ProgressModal(props) {
 
-    const { show ,setShow, title, message, handleYes, handleNo, yesText, noText } = props
+    const { show, setShow,progress } = props
     const handleCancel = () => {
-        if(handleNo!==undefined || handleNo!==null || !handleNo){
-            handleNo()
-        }
         setShow(false);
     };
     return (
@@ -19,15 +16,7 @@ export default function YesNoModal(props) {
             onRequestClose={handleCancel}>
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
-                    <Text style={styles.modalText}>{message}</Text>
-                    <View style={styles.row}>
-                        <View style={styles.r1}>
-                            <PressButton name={noText ? noText : 'No'} onPress={handleCancel} />
-                        </View>
-                        <View style={styles.r2}>
-                            <PressButton name={yesText ? yesText : 'Yes'} onPress={handleYes} />
-                        </View>
-                    </View>
+
                 </View>
             </View>
         </Modal>
@@ -44,10 +33,11 @@ const styles = StyleSheet.create({
     modalContent: {
         backgroundColor: 'white',
         padding: 20,
-        borderRadius: 10,
+        borderRadius: 0,
         elevation: 5,
         alignItems: 'center',
         width: '70%',
+        height : 60
     },
     modalText: {
         fontSize: 18,

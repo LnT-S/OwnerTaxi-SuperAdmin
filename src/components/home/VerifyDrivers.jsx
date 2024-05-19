@@ -1,22 +1,47 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, RefreshControl, Image, FlatList } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, RefreshControl, Image, FlatList, Alert } from 'react-native';
 import AuthenticatedLayout from '../../screens/layout/AuthenticatedLayout';
 
 import ThreeWayPushButton from '../../adOns/molecules/ThreeWayPushButton';
 import AddDocumentModal from '../../adOns/molecules/AddDocumentModal';
-import { getAllUserDocInfo } from '../../services/apiCall';
+import { getAllUserDocInfo, verifyDrivers } from '../../services/apiCall';
 import { showNoty } from '../../common/flash/flashNotification';
 import FlashMessage from 'react-native-flash-message';
 import server from '../../services/server.tsx'
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import YesNoModal from '../../adOns/molecules/YesNoModal.jsx';
+import { BgColor } from '../../styles/colors.jsx';
 
-const DocVerification = () => {
+const VerifyDrivers = () => {
     const navigation = useNavigation()
     const [selectedOption, setSelectedOption] = useState('')
     const [showAddModal, setShowAddModal] = useState(false)
     const [docList, setDocList] = useState([])
     const [isRefreshing, setIsRefreshing] = useState(false)
     const ref = useRef(null)
+    const [showModal, setShowModal] = useState(false)
+    const [phoneNo, setPhoneNo] = useState(0)
+    const handleYes = (verify) => {
+        setIsRefreshing(true)
+        if(phoneNo===0){
+            Alert.alert("Error","Try Loggin Again")
+            return
+        }
+        verifyDrivers({phoneNo , verify : verify})
+            .then(data => {
+                if (data.status === 200) {
+                    Alert.alert("Verification Status : 200",data.data.message)
+                } else {
+                    showNoty(data.data.message, "danger")
+                }
+            })
+            .catch(err => {
+                console.log("ERROR IN GET ALL USER DOC INFO", err);
+                showNoty("ERROR IN FETCHING USER DOC INFO", "danger")
+            })
+            setIsRefreshing(false)
+        setShowModal(false);
+    };
 
 
     const fetchData = () => {
@@ -52,10 +77,19 @@ const DocVerification = () => {
 
     return (
         <AuthenticatedLayout
-            title={'Document Verification'}
+            title={'Verify Drivers'}
             showAddIcon={true}
             addButtonAction={() => { setShowAddModal(true) }}
         >
+            <YesNoModal
+                show={showModal}
+                setShow={setShowModal}
+                title={'Verify Driver?'}
+                message={'Are You Sure Want To Verify this driver as Owner Taxi ?'}
+                handleYes={()=>handleYes("Owner Taxi")}
+                handleNo={()=>handleYes("")}
+                yesText={'Verify'}
+                noText={'Unverify'} />
             <FlashMessage ref={ref} />
             <AddDocumentModal
                 show={showAddModal}
@@ -72,21 +106,20 @@ const DocVerification = () => {
                     <RefreshControl refreshing={isRefreshing} onRefresh={fetchData} />
                 }
                 renderItem={({ item, index }) => {
-                    return (<TouchableOpacity onPress={() => {
-                        navigation.navigate('Documents', {
-                            item: item
-                        })
-                    }} style={styles.itemContainer} key={index}>
-                        <View style={{ width: '50%', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', gap: 15 }}>
-                            {item.avatar && <Image source={{ uri: `${server.server}${item.avatar}` }} style={{ height: 50, width: 50, borderRadius: 10 }} />}
+                    return (
+                        <TouchableOpacity
+                            onPress={() => { setPhoneNo(item.phoneNo); setShowModal(true) }}
+                            style={{...styles.itemContainer , backgroundColor : item.verifiedBy==="Owner Taxi" ? BgColor : '#E7EEF6'}} key={index}>
+                            <View style={{ width: '50%', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', gap: 15 }}>
+                                {item.avatar && <Image source={{ uri: `${server.server}${item.avatar}` }} style={{ height: 50, width: 50, borderRadius: 10 }} />}
+                                <Text style={styles.text}>
+                                    {item.name}
+                                </Text>
+                            </View>
                             <Text style={styles.text}>
-                                {item.name}
+                                {item.phoneNo}
                             </Text>
-                        </View>
-                        <Text style={styles.text}>
-                            {item.phoneNo}
-                        </Text>
-                    </TouchableOpacity>)
+                        </TouchableOpacity>)
                 }}
 
             />
@@ -111,4 +144,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default DocVerification;
+export default VerifyDrivers;

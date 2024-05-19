@@ -37,6 +37,9 @@ import DocVerification from './src/components/home/DocVerification';
 import DriverpayInfo from './src/components/home/DriverpayInfo';
 import vendorList from './src/components/home/VendorList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Documents from './src/components/document/Documents';
+import UserPayment from './src/components/payments/UserPayment';
+import VerifyDrivers from './src/components/home/VerifyDrivers';
 
 const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator();
@@ -48,6 +51,9 @@ function DrawerNavigator() {
       <Drawer.Screen name="Home" component={HomePage} options={{ headerShown: false }} />
       <Drawer.Screen name="DocVerification" component={DocVerification} options={{ headerShown: false }} />
       <Drawer.Screen name="DriverpayInfo" component={DriverpayInfo} options={{ headerShown: false }} />
+      <Drawer.Screen name="userPay" component={UserPayment} options={{ headerShown: false }} />
+      <Drawer.Screen name="VerifyDrivers" component={VerifyDrivers} options={{ headerShown: false }} />
+
       <Drawer.Screen name="vendorList" component={vendorList} options={{ headerShown: false }} />
       <Drawer.Screen name="Profile" component={ProfilePage} options={{ headerShown: false }} />
       <Drawer.Screen name="message" component={Message} options={{ headerShown: false }} />
@@ -55,6 +61,7 @@ function DrawerNavigator() {
       <Drawer.Screen name='notification' component={Notification} options={{ headerShown: false }} />
       <Drawer.Screen name='notificationScreen' component={NotificationFullPage} options={{ headerShown: false }} />
       <Drawer.Screen name="Setting" component={Setting} options={{ headerShown: false }} />
+      <Drawer.Screen name="Documents" component={Documents} options={{ headerShown: false }} />
     </Drawer.Navigator>
   );
 }

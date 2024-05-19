@@ -1,74 +1,133 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { StyleSheet, View, Text, Alert, BackHandler,TouchableOpacity } from 'react-native';
 import AuthenticatedLayout from '../../screens/layout/AuthenticatedLayout';
 import ThreeWayPushButton from '../../adOns/molecules/ThreeWayPushButton';
 import { FlatList } from 'react-native-gesture-handler';
+import { getPaymentsInfo } from '../../services/apiCall';
+import YesNoModal from '../../adOns/molecules/YesNoModal';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { RefreshControl } from 'react-native';
 
 const DriverpayInfo = () => {
+    const navigation = useNavigation()
     const [selectedOption, setSelectedOption] = useState('')
-    const docList = [
-        {
-            paymentpending: true,
-            phone: '0000110000'
-        },
-        {
-            paymentpending: false,
-            phone: '1000000000'
-        },
-        {
-            paymentpending: true,
-            phone: '0001000002'
-        },
-        {
-            paymentpending: false,
-            phone: '1000999000'
-        },
-        {
-            paymentpending: true,
-            phone: '1012300002'
-        },
-        {
-            paymentpending: true,
-            phone: '1000600000'
-        },
-        {
-            paymentpending: true,
-            phone: '0060000002'
-        },
-        {
-            paymentpending: false,
-            phone: '0000110000'
-        },
-        {
-            paymentpending: false,
-            phone: '1000000000'
-        },
-        {
-            paymentpending: false,
-            phone: '0001000002'
-        },
-        {
-            paymentpending: false,
-            phone: '1000999000'
-        },
-    ]
+    const [isRefreshing, setIsRefreshing] = useState(false)
+    const [docList, setDocList] = useState([])
+    const fetchData = () => {
+        getPaymentsInfo()
+            .then(data => {
+                if (data.status === 200) {
+                    setDocList([...data.data.data])
+                } else {
+                    Alert.alert("Error", "Try Logging Again")
+                }
+            })
+            .catch(err => {
+                console.log("ERROR IN FETCHING DATA", err);
+            })
+    }
+    
+    useFocusEffect(
+        useCallback(() => {
+            fetchData()
+        }, [])
+    )
+    const [showModal, setShowModal] = useState(false)
+    const handleYes = async () => {
+        setShowModal(false);
+        BackHandler.exitApp();
+    };
+    useEffect(()=>{
+        console.log("CHANGING");
+    },[docList])
+    useEffect(() => {
+        fetchData()
+        const backAction = () => {
+            // setShowModal(true)
+            // return true
+            navigation.goBack()
+            return true
+        }
+        console.log("BACKHANDLER SET IN HOME PAGE")
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+        return () => {
+            console.log('BACKHANDLER REMOVED FROM HOME PAGE')
+            backHandler.remove()
+        };
+    }, []);
+    // const docList = [
+    //     {
+    //         paymentpending: true,
+    //         phone: '0000110000'
+    //     },
+    //     {
+    //         paymentpending: false,
+    //         phone: '1000000000'
+    //     },
+    //     {
+    //         paymentpending: true,
+    //         phone: '0001000002'
+    //     },
+    //     {
+    //         paymentpending: false,
+    //         phone: '1000999000'
+    //     },
+    //     {
+    //         paymentpending: true,
+    //         phone: '1012300002'
+    //     },
+    //     {
+    //         paymentpending: true,
+    //         phone: '1000600000'
+    //     },
+    //     {
+    //         paymentpending: true,
+    //         phone: '0060000002'
+    //     },
+    //     {
+    //         paymentpending: false,
+    //         phone: '0000110000'
+    //     },
+    //     {
+    //         paymentpending: false,
+    //         phone: '1000000000'
+    //     },
+    //     {
+    //         paymentpending: false,
+    //         phone: '0001000002'
+    //     },
+    //     {
+    //         paymentpending: false,
+    //         phone: '1000999000'
+    //     },
+    // ]
 
     return (
         <AuthenticatedLayout title={'Driver Payment Info'}>
-         
+            <YesNoModal
+                show={showModal}
+                setShow={setShowModal}
+                title={'EXIT ?'}
+                message={'Are You Sure Want To Exit ?'}
+                handleYes={handleYes}
+                yesText={'Exit'}
+                noText={'Cancel'} />
             <FlatList
                 style={{}}
                 keyExtractor={(item, index) => (index)}
                 data={docList}
-                renderItem={({ item }) => {
-                    return <View style={{...styles.itemContainer, backgroundColor: (item.paymentpending? 'red' : 'green')}}>
+                refreshControl={
+                    <RefreshControl refreshing={isRefreshing} onRefresh={fetchData} />
+                }
+                renderItem={({ item  , i }) => {
+                    return <TouchableOpacity onPress={()=>navigation.navigate("userPay",{item : item})}  style={{ ...styles.itemContainer, backgroundColor: (item.paymentpending ? 'red' : 'green') }}>
                         <Text style={styles.text}>
-                            {item.phone}
+                            {item.id?.phoneNo}
                         </Text>
                         <Text style={styles.text}>
-                        >
+                            {'\>'}
                         </Text>
-                    </View>
+                    </TouchableOpacity>
                 }}
 
             />

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, FlatList} from 'react-native';
 import AuthenticatedLayout from '../../screens/layout/AuthenticatedLayout';
 import ThreeWayPushButton from '../../adOns/molecules/ThreeWayPushButton';
-import { FlatList } from 'react-native-gesture-handler';
 
 const VendorList = () => {
     const [selectedOption, setSelectedOption] = useState('')
@@ -52,7 +51,6 @@ const VendorList = () => {
             phone: '1000999000'
         },
     ]
-
     return (
         <AuthenticatedLayout title={'Vendor List'}>
             <ThreeWayPushButton outerStyles={{ margin: 9, width: '96%', height: 55 }}

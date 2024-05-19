@@ -5,6 +5,7 @@ import SearchBox from '../../adOns/atoms/Search'
 import AuthenticatedLayout from '../../screens/layout/AuthenticatedLayout'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { height } from '../../styles/responsive'
+import YesNoModal from '../../adOns/molecules/YesNoModal'
 
 const HomePage = () => {
     const navigation = useNavigation()
@@ -22,49 +23,19 @@ const HomePage = () => {
             name: 'Vendor List',
             route: 'vendorList'
         },
-        {
-            name: 'Option 4',
-            route: 'Setting'
-        },
-        {
-            name: 'Option 5',
-            route: 'Setting'
-        },
-        {
-            name: 'Option 6',
-            route: 'Setting'
-        },
-        {
-            name: 'Option 7',
-            route: 'Setting'
-        },
-        {
-            name: 'Option 8',
-            route: 'Setting'
-        },
-        {
-            name: 'Option 9',
-            route: 'Setting'
-        },
-        {
-            name: 'Option 10',
-            route: 'Setting'
-        },
-        {
-            name: 'Option 10',
-            route: 'Setting'
-        },   {
-            name: 'Option 10',
-            route: 'Setting'
-        },   {
-            name: 'Option 10',
-            route: 'Setting'
-        },
+
     ]
+    const [showModal, setShowModal] = useState(false)
+    const handleYes = async () => {
+        setShowModal(false);
+        BackHandler.exitApp();
+    };
     useEffect(() => {
         const backAction = () => {
-            navigation.goBack()
+            setShowModal(true)
             return true
+            // navigation.goBack()
+            // return true
         }
         console.log("BACKHANDLER SET IN HOME PAGE")
         const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
@@ -76,7 +47,36 @@ const HomePage = () => {
 
     return (
         <AuthenticatedLayout title={'Home'}>
-            <FlatList
+            <YesNoModal
+                show={showModal}
+                setShow={setShowModal}
+                title={'EXIT ?'}
+                message={'Are You Sure Want To Exit ?'}
+                handleYes={handleYes}
+                yesText={'Exit'}
+                noText={'Cancel'} />
+            <TouchableOpacity onPress={() => { navigation.navigate('DocVerification') }} style={styles.itemContainer}>
+                <Text style={styles.text}>
+                    Document Verification
+                </Text>
+                <Text style={[styles.text]}>
+                </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => { navigation.navigate('DriverpayInfo') }} style={styles.itemContainer}>
+                <Text style={styles.text}>
+                    Driver Payment Info
+                </Text>
+                <Text style={[styles.text]}>
+                </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => { navigation.navigate('VerifyDrivers') }} style={styles.itemContainer}>
+                <Text style={styles.text}>
+                    Verify Drivers
+                </Text>
+                <Text style={[styles.text]}>
+                </Text>
+            </TouchableOpacity>
+            {/*<FlatList
                 style={{}}
                 keyExtractor={(item, index) => (index)}
                 data={OptionList}
@@ -90,7 +90,7 @@ const HomePage = () => {
                     </TouchableOpacity>
                 }}
 
-            />
+            />*/}
         </AuthenticatedLayout>
     )
 }

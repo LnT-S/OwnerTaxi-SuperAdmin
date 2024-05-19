@@ -77,3 +77,89 @@ export const addDocumentList = async (document) => {
     console.log('DATA RECIVED ', data)
     return { status: res.status, data: data }
 }
+export const setDocumentStatus = async (formData) => {
+    const URL = `${server.server}/superadmin/set-doc-status`
+    console.log('URL ', URL)
+    let auth_token = await AsyncStorage.getItem('token')
+
+    let res = await fetch(URL, {
+        method: 'post',
+        mode: 'cors',
+        headers: {
+            'Authorization': auth_token ? `Bearer ${auth_token}` : '',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+    })
+    let data = await res.json()
+    console.log('DATA RECIVED ', data)
+    return { status: res.status, data: data }
+}
+export const getPaymentsInfo = async () => {
+    const URL = `${server.server}/superadmin/get-payment-info`
+    console.log('URL ', URL)
+    let auth_token = await AsyncStorage.getItem('token')
+
+    let res = await fetch(URL, {
+        method: 'get',
+        mode: 'cors',
+        headers: {
+            'Authorization': auth_token ? `Bearer ${auth_token}` : ''
+        }
+    })
+    let data = await res.json()
+    console.log('DATA RECIVED ', data)
+    return { status: res.status, data: data }
+}
+export const getAllUserDocInfo = async () => {
+    const URL = `${server.server}/superadmin/get-all-user-doc-info`
+    console.log('URL ', URL)
+    let auth_token = await AsyncStorage.getItem('token')
+
+    let res = await fetch(URL, {
+        method: 'get',
+        mode: 'cors',
+        headers: {
+            'Authorization': auth_token ? `Bearer ${auth_token}` : ''
+        }
+    })
+    let data = await res.json()
+    console.log('DATA RECIVED ', data)
+    return { status: res.status, data: data }
+}
+export const verifyDrivers = async (formData) => {
+    const URL = `${server.server}/superadmin/verify-drivers`
+    console.log('URL ', URL)
+    let auth_token = await AsyncStorage.getItem('token')
+console.log("FORM DATA ",formData);
+    let res = await fetch(URL, {
+        method: 'post',
+        mode: 'cors',
+        headers: {
+            'Authorization': auth_token ? `Bearer ${auth_token}` : '',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+    })
+    let data = await res.json()
+    console.log('DATA RECIVED ', data)
+    return { status: res.status, data: data }
+}
+export const setPaymentStatus = async (formData) => {
+    const URL = `${server.server}/superadmin/set-payment-info`
+    console.log('URL ', URL)
+    let auth_token = await AsyncStorage.getItem('token')
+
+    let res = await fetch(URL, {
+        method: 'post',
+        mode: 'cors',
+        headers: {
+            'Authorization': auth_token ? `Bearer ${auth_token}` : '',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+    })
+    let data = await res.json()
+    console.log('DATA RECIVED ', data)
+    return { status: res.status, data: data }
+}
