@@ -9,14 +9,15 @@ const CheckbocTC = (props) => {
    const {isChecked , setIsChecked} = props
 
     return (
-        <View style={styles.container}>
+        <View style={{...styles.container , ...props?.styles}}>
             <CheckBox
                 title={props.placeholder}
                 checked={isChecked}
                 onPress={()=>setIsChecked(!isChecked)}
-                containerStyle={styles.checkbox}
+                containerStyle={{...styles.checkbox}}
                 activeOpacity={1}
-
+                checkedColor={BgColor}
+                touchSoundDisabled={false}
             />
         </View>
     )

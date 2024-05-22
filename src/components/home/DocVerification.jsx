@@ -19,14 +19,14 @@ const DocVerification = () => {
     const [isRefreshing, setIsRefreshing] = useState(false)
     const ref = useRef(null)
     const [searchedTerm, setSearchedTerm] = useState('')
-    const [searchedData, setSearchedData] = useState(docList)
+    const [searchedData, setSearchedData] = useState([])
 
     useEffect(() => {
         // Filter data whenever the search query changes
         if (searchedTerm === '') {
             return setSearchedData(docList)
         }
-        console.log('Serched term', searchedTerm)
+        // console.log('Serched term', searchedTerm)
         const filtered = docList.filter(item =>
             (item.name && item.name.includes(searchedTerm || '')) ||
             (item.phoneNo && item.phoneNo.toString().includes(searchedTerm || ''))
@@ -41,6 +41,7 @@ const DocVerification = () => {
             .then(data => {
                 if (data.status === 200) {
                     setDocList(prev => { return [...data.data.data] });
+                    setSearchedData(prev => { return [...data.data.data] })
                 } else {
                     showNoty(data.data.message, "danger")
                 }
@@ -79,8 +80,8 @@ const DocVerification = () => {
             <SearchBox  placeholder={'Search by Name or Phone Number'}
             setSearchedTerm={setSearchedTerm}
             searchedTerm={searchedTerm} />
-            <ThreeWayPushButton outerStyles={{ margin: 9, width: '96%', height: 55 }}
-                option1={'All'} option2={'Pending'} option3={'Verified'} setter={setSelectedOption} />
+            {/*<ThreeWayPushButton outerStyles={{ margin: 9, width: '96%', height: 55 }}
+    option1={'All'} option2={'Pending'} option3={'Verified'} setter={setSelectedOption} />*/}
 
             <FlatList
                 style={{}}

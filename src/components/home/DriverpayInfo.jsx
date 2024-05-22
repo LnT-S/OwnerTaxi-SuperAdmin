@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Alert, BackHandler,TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Alert, BackHandler, TouchableOpacity } from 'react-native';
 import AuthenticatedLayout from '../../screens/layout/AuthenticatedLayout';
 import ThreeWayPushButton from '../../adOns/molecules/ThreeWayPushButton';
 import { FlatList } from 'react-native-gesture-handler';
@@ -7,17 +7,33 @@ import { getPaymentsInfo } from '../../services/apiCall';
 import YesNoModal from '../../adOns/molecules/YesNoModal';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { RefreshControl } from 'react-native';
+import SearchBox from '../../adOns/atoms/Search';
 
 const DriverpayInfo = () => {
     const navigation = useNavigation()
     const [selectedOption, setSelectedOption] = useState('')
     const [isRefreshing, setIsRefreshing] = useState(false)
     const [docList, setDocList] = useState([])
+    const [searchedTerm, setSearchedTerm] = useState('')
+    const [searchedData, setSearchedData] = useState([])
+    useEffect(() => {
+        // Filter data whenever the search query changes
+        if (searchedTerm === '') {
+            return setSearchedData(docList)
+        }
+        // console.log('Serched term', searchedTerm)
+        const filtered = docList.filter(item =>
+            (item?.id?.name && item?.id?.name.includes(searchedTerm || '')) ||
+            (item?.id?.phoneNo && item?.id?.phoneNo.toString().includes(searchedTerm || ''))
+        );
+        setSearchedData(filtered);
+    }, [searchedTerm]);
     const fetchData = () => {
         getPaymentsInfo()
             .then(data => {
                 if (data.status === 200) {
                     setDocList([...data.data.data])
+                    setSearchedData([...data.data.data])
                 } else {
                     Alert.alert("Error", "Try Logging Again")
                 }
@@ -26,7 +42,7 @@ const DriverpayInfo = () => {
                 console.log("ERROR IN FETCHING DATA", err);
             })
     }
-    
+
     useFocusEffect(
         useCallback(() => {
             fetchData()
@@ -37,9 +53,9 @@ const DriverpayInfo = () => {
         setShowModal(false);
         BackHandler.exitApp();
     };
-    useEffect(()=>{
+    useEffect(() => {
         console.log("CHANGING");
-    },[docList])
+    }, [docList])
     useEffect(() => {
         fetchData()
         const backAction = () => {
@@ -112,15 +128,21 @@ const DriverpayInfo = () => {
                 handleYes={handleYes}
                 yesText={'Exit'}
                 noText={'Cancel'} />
+            <SearchBox placeholder={'Search by Name or Phone Number'}
+                setSearchedTerm={setSearchedTerm}
+                searchedTerm={searchedTerm} />
             <FlatList
                 style={{}}
                 keyExtractor={(item, index) => (index)}
-                data={docList}
+                data={searchedData}
                 refreshControl={
                     <RefreshControl refreshing={isRefreshing} onRefresh={fetchData} />
                 }
-                renderItem={({ item  , i }) => {
-                    return <TouchableOpacity onPress={()=>navigation.navigate("userPay",{item : item})}  style={{ ...styles.itemContainer, backgroundColor: (item.paymentpending ? 'red' : 'green') }}>
+                renderItem={({ item, i }) => {
+                    return <TouchableOpacity onPress={() => navigation.navigate("userPay", { item: item })} style={{ ...styles.itemContainer, backgroundColor: (item.paymentpending ? 'red' : 'green') }}>
+                        <Text style={styles.text}>
+                            {item.id?.name}
+                        </Text>
                         <Text style={styles.text}>
                             {item.id?.phoneNo}
                         </Text>

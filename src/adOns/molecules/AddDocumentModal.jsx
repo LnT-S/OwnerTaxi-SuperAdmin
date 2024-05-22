@@ -6,6 +6,7 @@ import { BgColor } from '../../styles/colors';
 import { addDocumentList } from '../../services/apiCall';
 import FlashMessage from 'react-native-flash-message';
 import { showNoty } from '../../common/flash/flashNotification';
+import CheckbocTC from '../atoms/CheckbocT&C';
 
 const AddDocumentModal = (props) => {
     const { show, setShow } = props
@@ -13,6 +14,7 @@ const AddDocumentModal = (props) => {
 
     const [documentFor, setDocumentFor] = useState('')
     const [documentName, setDocumentName] = useState('')
+    const [required , setIsRequired] = useState(false)
 
     const handleCancel = () => {
         setDocumentFor('')
@@ -25,7 +27,7 @@ const AddDocumentModal = (props) => {
             setDocumentName('')
             return
         }
-        addDocumentList({ documentFor, documentName })
+        addDocumentList({ documentFor, documentName,required })
             .then(data => {
                 showNoty(data.data.message, "success")
                 setDocumentFor('')
@@ -62,6 +64,7 @@ const AddDocumentModal = (props) => {
                             <TextInput
                                 style={styles.fieldInput}
                                 placeholder='Document Name'
+                                placeholderTextColor={"black"}
                                 value={documentName}
                                 onChangeText={v => { setDocumentName(v) }}
                             />
@@ -73,6 +76,7 @@ const AddDocumentModal = (props) => {
                                 style={styles.fieldDD}
                                 data={[{ label: 'Driver', value: 'Driver' }, { label: 'Vehicle', value: 'Vehicle' }]}
                                 placeholder='Select Document For'
+                                placeholderStyle={{color : 'black'}}
                                 value={documentFor}
                                 labelField="label"
                                 valueField="value"
@@ -80,6 +84,9 @@ const AddDocumentModal = (props) => {
                                     setDocumentFor(item.value);
                                 }}
                             />
+                        </View>
+                        <View style={{borderWidth : 2 , borderColor : BgColor,justifyContent : "flex-start", marginTop : 15,marginBottom : -15, padding : 0}}>
+                            <CheckbocTC isChecked={required} setIsChecked={setIsRequired} placeholder={"Required"} styles={{}}/>
                         </View>
                     </View>
                     <View style={styles.row}>

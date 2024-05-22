@@ -46,7 +46,7 @@ const HomePage = () => {
     }, []);
 
     return (
-        <AuthenticatedLayout title={'Home'}>
+        <AuthenticatedLayout title={'Home'} showBackIcon={false}>
             <YesNoModal
                 show={showModal}
                 setShow={setShowModal}
