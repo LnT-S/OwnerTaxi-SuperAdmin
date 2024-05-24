@@ -14,7 +14,8 @@ const AddDocumentModal = (props) => {
 
     const [documentFor, setDocumentFor] = useState('')
     const [documentName, setDocumentName] = useState('')
-    const [required , setIsRequired] = useState(false)
+    const [required, setIsRequired] = useState(false)
+    const [autoGenerateNo, setAutoGenerateNo] = useState(false)
 
     const handleCancel = () => {
         setDocumentFor('')
@@ -27,7 +28,7 @@ const AddDocumentModal = (props) => {
             setDocumentName('')
             return
         }
-        addDocumentList({ documentFor, documentName,required })
+        addDocumentList({ documentFor, documentName, required ,autoGenerateNo})
             .then(data => {
                 showNoty(data.data.message, "success")
                 setDocumentFor('')
@@ -43,9 +44,9 @@ const AddDocumentModal = (props) => {
     // useEffect(() => {
     //     console.log("FOR ", documentFor)
     // }, [documentFor])
-    // useEffect(() => {
-    //     console.log("FOR ", documentName)
-    // }, [documentName])
+    useEffect(() => {
+        console.log("FOR ", autoGenerateNo)
+    }, [autoGenerateNo])
 
     return (
         <Modal
@@ -76,7 +77,7 @@ const AddDocumentModal = (props) => {
                                 style={styles.fieldDD}
                                 data={[{ label: 'Driver', value: 'Driver' }, { label: 'Vehicle', value: 'Vehicle' }]}
                                 placeholder='Select Document For'
-                                placeholderStyle={{color : 'black'}}
+                                placeholderStyle={{ color: 'black' }}
                                 value={documentFor}
                                 labelField="label"
                                 valueField="value"
@@ -85,8 +86,11 @@ const AddDocumentModal = (props) => {
                                 }}
                             />
                         </View>
-                        <View style={{borderWidth : 2 , borderColor : BgColor,justifyContent : "flex-start", marginTop : 15,marginBottom : -15, padding : 0}}>
-                            <CheckbocTC isChecked={required} setIsChecked={setIsRequired} placeholder={"Required"} styles={{}}/>
+                        <View style={{ borderWidth: 2, borderColor: BgColor, justifyContent: "flex-start", marginTop: 15, padding: 0 }}>
+                            <CheckbocTC isChecked={required} setIsChecked={setIsRequired} placeholder={"Required"} styles={{}} />
+                        </View>
+                        <View style={{ borderWidth: 2, borderColor: BgColor, justifyContent: "flex-start", marginTop: 15, marginBottom: -15, padding: 0 }}>
+                            <CheckbocTC isChecked={autoGenerateNo} setIsChecked={setAutoGenerateNo} placeholder={"Auto Generate No"} styles={{}} />
                         </View>
                     </View>
                     <View style={styles.row}>
