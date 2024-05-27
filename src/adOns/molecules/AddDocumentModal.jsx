@@ -14,6 +14,7 @@ const AddDocumentModal = (props) => {
 
     const [documentFor, setDocumentFor] = useState('')
     const [documentName, setDocumentName] = useState('')
+    const [locality , setLocality] = useState('')
     const [required, setIsRequired] = useState(false)
     const [autoGenerateNo, setAutoGenerateNo] = useState(false)
 
@@ -28,7 +29,7 @@ const AddDocumentModal = (props) => {
             setDocumentName('')
             return
         }
-        addDocumentList({ documentFor, documentName, required ,autoGenerateNo})
+        addDocumentList({ documentFor, documentName, required ,autoGenerateNo,locality})
             .then(data => {
                 showNoty(data.data.message, "success")
                 setDocumentFor('')
@@ -57,7 +58,7 @@ const AddDocumentModal = (props) => {
             <View style={styles.modalContainer}>
                 <FlashMessage ref={modalRef} />
                 <View style={styles.modalContent}>
-                    <Text style={styles.modalText}>{"Add Required Document Name "}</Text>
+                    <Text style={styles.modalText}>{"Add Required Document Name"}</Text>
                     <View style={styles.fieldContainer}>
                         <View style={styles.field}>
                             <Text style={styles.fieldText}>
@@ -85,6 +86,18 @@ const AddDocumentModal = (props) => {
                                     setDocumentFor(item.value);
                                 }}
                             />
+                            {documentFor==='Vehicle' ?<Dropdown
+                                style={{...styles.fieldDD , marginTop : 15}}
+                                data={[{ label: 'Private', value: 'Private' }, { label: 'Permit', value: 'Permit' }]}
+                                placeholder='Select Vehicle Type'
+                                placeholderStyle={{ color: 'black' }}
+                                value={locality}
+                                labelField="label"
+                                valueField="value"
+                                onChange={item => {
+                                    setLocality(item.value);
+                                }}
+                            /> : ''}
                         </View>
                         <View style={{ borderWidth: 2, borderColor: BgColor, justifyContent: "flex-start", marginTop: 15, padding: 0 }}>
                             <CheckbocTC isChecked={required} setIsChecked={setIsRequired} placeholder={"Required"} styles={{}} />
