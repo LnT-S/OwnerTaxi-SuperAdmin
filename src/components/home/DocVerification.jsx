@@ -16,6 +16,9 @@ const DocVerification = () => {
     const [selectedOption, setSelectedOption] = useState('')
     const [showAddModal, setShowAddModal] = useState(false)
     const [docList, setDocList] = useState([])
+    const [allDocList , setAllDocList] = useState([])
+    const [acceptedDocList , setAcceptedDocList] = useState([])
+    const [missingDocList , setMissingDocList] = useState([])
     const [isRefreshing, setIsRefreshing] = useState(false)
     const ref = useRef(null)
     const [searchedTerm, setSearchedTerm] = useState('')
@@ -33,6 +36,20 @@ const DocVerification = () => {
         );
         setSearchedData(filtered);
     }, [searchedTerm]);
+    useEffect(()=>{
+        if(selectedOption.includes("All") || selectedOption==''){
+            setDocList(allDocList)
+            setSearchedData(allDocList)
+        }else{
+            if(selectedOption.includes('Pending')){
+                setDocList(missingDocList)
+                setSearchedData(missingDocList)
+            }else{
+                setDocList(prev=>{return [...acceptedDocList]})
+                setSearchedData(prev=>{return [...acceptedDocList]})
+            }
+        }
+    },[selectedOption])
 
     const fetchData = () => {
         setIsRefreshing(true)
@@ -40,8 +57,21 @@ const DocVerification = () => {
         getAllUserDocInfo()
             .then(data => {
                 if (data.status === 200) {
-                    setDocList(prev => { return [...data.data.data] });
-                    setSearchedData(prev => { return [...data.data.data] })
+                    setAllDocList(prev => { return [...data.data.data] });
+                    setAcceptedDocList(prev => { return [...data.data.filteredData.accepted] });
+                    setMissingDocList(prev => { return [...data.data.filteredData.uprolled] });
+                    if(selectedOption.includes("All") || selectedOption==''){
+                        setDocList(prev => { return [...data.data.data] })
+                        setSearchedData(prev => { return [...data.data.data] })
+                    }else{
+                        if(selectedOption.includes('Pending')){
+                            setDocList(prev => { return [...data.data.filteredData.uprolled] })
+                            setSearchedData(prev => { return [...data.data.filteredData.uprolled] })
+                        }else{
+                            setDocList(prev => { return [...data.data.filteredData.accepted] })
+                            setSearchedData(prev => { return [...data.data.filteredData.accepted] })
+                        }
+                    }
                 } else {
                     showNoty(data.data.message, "danger")
                 }
@@ -52,11 +82,11 @@ const DocVerification = () => {
             })
         setIsRefreshing(false)
     }
-    useFocusEffect(
-        useCallback(() => {
-            fetchData()
-        }, [])
-    )
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         fetchData()
+    //     }, [])
+    // )
     useEffect(() => {
         setIsRefreshing(true)
         fetchData()
@@ -77,11 +107,11 @@ const DocVerification = () => {
                 show={showAddModal}
                 setShow={setShowAddModal}
             />
-            <SearchBox  placeholder={'Search by Name or Phone Number'}
-            setSearchedTerm={setSearchedTerm}
-            searchedTerm={searchedTerm} />
-            {/*<ThreeWayPushButton outerStyles={{ margin: 9, width: '96%', height: 55 }}
-    option1={'All'} option2={'Pending'} option3={'Verified'} setter={setSelectedOption} />*/}
+            <SearchBox placeholder={'Search by Name or Phone Number'}
+                setSearchedTerm={setSearchedTerm}
+                searchedTerm={searchedTerm} />
+            <ThreeWayPushButton outerStyles={{ margin: 9, width: '96%', height: 75 }}
+                option1={'All \n('+ allDocList.length + ')'} option2={'Pending\n(' + missingDocList.length + ')'} option3={'Verified \n('+ acceptedDocList.length + ')'} setter={setSelectedOption} />
 
             <FlatList
                 style={{}}
@@ -107,7 +137,6 @@ const DocVerification = () => {
                         </Text>
                     </TouchableOpacity>)
                 }}
-
             />
         </AuthenticatedLayout>
     );

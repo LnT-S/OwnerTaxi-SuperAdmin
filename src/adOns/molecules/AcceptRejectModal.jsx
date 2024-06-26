@@ -7,6 +7,7 @@ import { captureAndDownload, copyToClipboard } from "../../utils/UtilityFuntions
 import * as Progress from 'react-native-progress';
 import { useFocusEffect } from "@react-navigation/native";
 import { setDocumentStatus } from "../../services/apiCall";
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 export default function AcceptRejectModal(props) {
 
@@ -90,6 +91,9 @@ export default function AcceptRejectModal(props) {
                             onChangeText={v=>setComment(v)}
                             style={{width : '100%',borderWidth : 1,borderColor : BgColor,marginBottom : 30,marginTop : 15, color : 'black',padding : 5}}
                         />
+                    </View>
+                    <View style={styles.row}>
+                    
                     </View>
                     <View style={styles.row}>
                         <View style={styles.r1}>

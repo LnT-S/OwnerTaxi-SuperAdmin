@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { ActivityIndicator, BackHandler, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { ActivityIndicator, BackHandler, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AuthenticatedLayout from '../../screens/layout/AuthenticatedLayout';
 import MainDocumentCard from './MainDocumentCard.jsx'
@@ -10,6 +10,9 @@ import { useProfile } from '../../context/ContextProvider'
 import { showNoty } from '../../common/flash/flashNotification'
 import { WHITEBG, BgColor } from '../../styles/colors';
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'
+import PressButton from '../../adOns/atoms/PressButton.jsx';
+import { blockUser } from '../../services/apiCall.jsx';
+import FlashMessage from 'react-native-flash-message';
 
 const Documents = () => {
   const navigation = useNavigation()
@@ -17,23 +20,41 @@ const Documents = () => {
   const props = route.params?.item
   const { profileState, profileDispatch } = useProfile()
   const [loading, setLoading] = useState(true)
+  const [blockState, setBlockState] = useState(props.blocked)
   const [carSubArray, setCarSubArray] = useState([])
   const [driverArray, setDriverArray] = useState([...props?.userDocument])
   const [carArray, setCarArray] = useState([...props?.vehicle])
   const [vehicleNo, setVehicleNo] = useState('')
   const [progress, setProgress] = useState(0)
-
+  const ref = useRef()
   const setArray = (item, index) => {
     console.log(item, index)
     setVehicleNo(item.vehicleNo)
     setCarSubArray(item.document)
   }
+  const handleCall = () => {
+    Linking.openURL(`tel:${props.phoneNo}`);
+  };
+  const block = (state) => {
+    blockUser({ phoneNo: props.phoneNo, block: state })
+      .then(data => {
+        console.log(data)
+        if (data.status === 200) {
+          showNoty(data.data.message, "success")
+          setBlockState(data.data.data)
+        } else {
+          showNoty(data.data.message, "danger")
+        }
+      })
+      .catch(err => console.log(err))
+  }
   useFocusEffect(
     useCallback(() => {
+      setBlockState(props.blocked)
       setCarArray(props?.vehicle)
       setDriverArray([...props?.userDocument])
       setCarSubArray([])
-    }, [route,props])
+    }, [route, props])
   )
 
   useEffect(() => {
@@ -54,7 +75,7 @@ const Documents = () => {
 
   return (
     <AuthenticatedLayout title={'Document'}>
-      
+      <FlashMessage ref={ref} />
       <ScrollView>
         <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
           <View style={{ backgroundColor: WHITEBG, width: '97%', borderRadius: 15 }}>
@@ -63,7 +84,7 @@ const Documents = () => {
             </View>
             <View style={styles.document}>
               {driverArray?.map((item, index) => {
-                return <MainDocumentCard item={item} key={index} user={props} setProgress={setProgress}/>
+                return <MainDocumentCard item={item} key={index} user={props} setProgress={setProgress} />
               })}
             </View>
           </View>
@@ -80,10 +101,18 @@ const Documents = () => {
               })}
               {
                 (carSubArray.length > 0) && carSubArray.map((item, index) => {
-                  return <MainDocumentCard item={item} key={index} vehicleNo={vehicleNo} user={props} setProgress={setProgress}/>
+                  return <MainDocumentCard item={item} key={index} vehicleNo={vehicleNo} user={props} setProgress={setProgress} />
                 })
               }
             </View>
+          </View>
+          <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20, flexDirection: "row", padding: 5, flexWrap: "wrap" }}>
+            <PressButton name="Block On" onPress={handleCall} />
+            <PressButton name="Block Till" onPress={handleCall} />
+            {(blockState === true) ? <PressButton name="UnBlock" onPress={() => block(false)} /> : <PressButton name="Block Immediate" onPress={() => block(true)} />}
+          </View>
+          <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20, flexDirection: "row" }}>
+            <PressButton name="Call" onPress={handleCall} />
           </View>
         </View>
       </ScrollView>

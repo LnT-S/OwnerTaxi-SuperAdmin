@@ -163,3 +163,21 @@ export const setPaymentStatus = async (formData) => {
     console.log('DATA RECIVED ', data)
     return { status: res.status, data: data }
 }
+export const blockUser = async (formData) => {
+    const URL = `${server.server}/superadmin/block-driver`
+    console.log('URL ', URL)
+    let auth_token = await AsyncStorage.getItem('token')
+
+    let res = await fetch(URL, {
+        method: 'post',
+        mode: 'cors',
+        headers: {
+            'Authorization': auth_token ? `Bearer ${auth_token}` : '',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+    })
+    let data = await res.json()
+    console.log('DATA RECIVED ', data)
+    return { status: res.status, data: data }
+}

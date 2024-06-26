@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -40,6 +40,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Documents from './src/components/document/Documents';
 import UserPayment from './src/components/payments/UserPayment';
 import VerifyDrivers from './src/components/home/VerifyDrivers';
+import FlashMessage from 'react-native-flash-message';
 
 const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator();
@@ -69,6 +70,7 @@ function App() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [initialRoute , setInitialRoute] = useState("LoginScreen")
+  const ref = useRef()
 
   const isTokenAvailable = async ()=>{
     let token = await AsyncStorage.getItem('token')
@@ -131,6 +133,7 @@ function App() {
           </Stack.Navigator>)}
         </NavigationContainer>
       </ContextProvider>
+      <FlashMessage ref={ref}/>
     </SafeAreaView>
   )
 }
